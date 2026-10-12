@@ -1,4 +1,4 @@
-// Travel with Mkay v4 (v2 + liked v3 pieces): menu, typed destination, testimonial players and theater,
+// Travel with Mkay v5 (v2 + liked v3 pieces + Harsh home notes): menu, header shadow, typed destination, testimonial players
 // offer tabs, world map sneak peeks, closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -12,6 +12,13 @@
       var open = nav.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
+  }
+
+  // Header picks up a soft shadow once the page scrolls
+  var header = document.querySelector('.site-header');
+  if (header) {
+    var onScroll = function () { header.classList.toggle('scrolled', (window.scrollY || 0) > 8); };
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
 
   // Hero: "I'm Going To ____." types through real destinations (static for reduced motion)
@@ -84,7 +91,8 @@
     });
   }
 
-  // Offer tabs: [role=tablist] shows the panel named by aria-controls; arrow keys move between tabs
+  // Offer tabs: [role=tablist] shows the panel named by aria-controls; arrow keys move between tabs.
+  // A link like coaching.html#bootcamp opens that tab (the home page "work with me" rows use this).
   $$('[role="tablist"]').forEach(function (list) {
     var tabs = $$('[role="tab"]', list);
     function sel(t) {
@@ -95,8 +103,22 @@
         if (p) p.hidden = o !== t;
       });
     }
+    function fromHash() {
+      var h = location.hash.slice(1);
+      var t = h && tabs.filter(function (o) { return o.getAttribute('data-hash') === h; })[0];
+      if (!t) return;
+      sel(t);
+      var sec = document.getElementById('options');
+      if (sec) sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    }
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
     tabs.forEach(function (t, idx) {
-      t.addEventListener('click', function () { sel(t); });
+      t.addEventListener('click', function () {
+        sel(t);
+        var h = t.getAttribute('data-hash');
+        if (h && history.replaceState) history.replaceState(null, '', '#' + h);
+      });
       t.addEventListener('keydown', function (e) {
         if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
         e.preventDefault();
@@ -154,6 +176,46 @@
     function centre() { if (holder.scrollWidth > holder.clientWidth) holder.scrollLeft = holder.scrollWidth * 0.545 - holder.clientWidth / 2; }
     centre(); window.addEventListener('load', centre);
   }
+
+  // Checklist sign-up: posts to the live site's Contact Form 7 form (#4081), the same one its pop-up uses.
+  // Without JS the form falls back to opening the travel kit page.
+  $$('form.cf7').forEach(function (form) {
+    var card = form.parentElement, thanks = card.querySelector('.thanks');
+    var note = form.querySelector('.form-note'), btn = form.querySelector('button[type="submit"]');
+    var kit = form.getAttribute('action');
+    function fieldError(name, msg) {
+      var input = form.querySelector('[name="' + name + '"]'), slot = form.querySelector('.err[data-for="' + name + '"]');
+      if (input) input.setAttribute('aria-invalid', 'true');
+      if (slot) slot.textContent = msg;
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      note.textContent = '';
+      $$('.err', form).forEach(function (s) { s.textContent = ''; });
+      $$('input[required]', form).forEach(function (i) { i.removeAttribute('aria-invalid'); });
+      var name = form.querySelector('[name="your-name"]'), email = form.querySelector('[name="your-email"]');
+      if (!name.value.trim()) fieldError('your-name', 'Please tell me your name.');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) fieldError('your-email', 'Please enter a valid email address.');
+      var bad = form.querySelector('[aria-invalid="true"]');
+      if (bad) { bad.focus(); return; }
+      var label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      fetch(form.getAttribute('data-endpoint'), { method: 'POST', body: new FormData(form) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.status === 'mail_sent') {
+            $$(':scope > h3, :scope > p', card).forEach(function (el) { el.hidden = true; });
+            form.hidden = true; thanks.hidden = false;
+          } else if (d.status === 'validation_failed' && d.invalid_fields) {
+            d.invalid_fields.forEach(function (f) { fieldError(f.field, f.message); });
+          } else {
+            note.innerHTML = (d.message ? d.message + ' ' : 'That did not go through. ') + 'You can also <a href="' + kit + '">get the kit here</a>.';
+          }
+        })
+        .catch(function () { note.innerHTML = 'That did not go through just now. Please try again, or <a href="' + kit + '">get the kit here</a>.'; })
+        .then(function () { btn.disabled = false; btn.textContent = label; });
+    });
+  });
 
   // Closing line: "I'm going to ____." The button repeats what they typed.
   var dest = document.getElementById('going-to');

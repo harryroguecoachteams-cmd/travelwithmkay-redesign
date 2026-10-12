@@ -42,20 +42,19 @@
   <symbol id="i-yt" viewBox="0 0 24 24"><path d="M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12 31 31 0 0 0 2 15.8a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1c.3-1.3.4-2.5.4-3.8s-.1-2.5-.4-3.8zM10 15V9l5.2 3z"/></symbol>
 </svg>
 <a class="skip" href="#main">Skip to content</a>
-<div class="topbar"><a href="https://travelwithmkay.co.ke/travel-kit/"><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg> Ready to Go? Grab my free power-packing guide</a></div>
+<div class="topbar"><a href="https://travelwithmkay.co.ke/travel-kit/"><picture class="emo"><source media="(prefers-reduced-motion: reduce)" srcset="assets/img/emoji/airplane.png"><img src="assets/img/emoji/airplane.webp" width="18" height="18" alt="" loading="lazy"></picture> Ready to go? Grab my free power-packing guide</a></div>
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="index.html"><img src="assets/img/logo.png" width="897" height="219" alt="Travel with Mkay"></a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span><span></span></button>
     <nav class="nav" id="site-nav" aria-label="Main">
       <a href="index.html">Home</a>
       <a href="coaching.html">Services</a>
       <a href="stories.html">Client Stories</a>
       <a href="podcasts.html">Podcasts</a>
       <a href="about.html">About</a>
-      <a href="learn.html">Learn</a>
       <a href="https://travelwithmkay.co.ke/blogs/">Blog</a>
-      <a class="btn btn-grad btn-pill" href="coaching.html#options">Start Your Journey <svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></a>
+      <a class="btn btn-grad btn-pill nav-cta" href="coaching.html#options">Start Your Journey <svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></a>
     </nav>
   </div>
 </header>
@@ -80,17 +79,37 @@
     <p style="margin-top:30px;color:var(--ink-soft);font-size:.95rem;max-width:80ch">These recommendations are based on my personal experience and what I've seen work for my clients. Always double-check prices, terms, and suitability for your specific passport and situation.</p>
   </div>
 </section>
-<section class="section kit" style="background-image:url(assets/img/bg-packing.webp)" aria-labelledby="kit-title">
+<section class="section kit" id="checklist" style="background-image:url(assets/img/bg-packing.webp)" aria-labelledby="kit-title">
   <div class="wrap">
     <div>
       <span class="kicker">Free download</span>
       <h2 id="kit-title">Stop Overthinking. Start Packing.</h2>
-      <p class="lead">My free travel kit takes you from “one day” to “I'm going”, whether it's your first trip or your fiftieth. Join 500+ women who have already downloaded it.</p>
-      <a class="btn btn-grad" href="https://travelwithmkay.co.ke/travel-kit/">Get My Free Travel Kit <svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></a>
+      <p class="lead">My free Pre-Trip Confidence Checklist is a quick, honest check-in: are you mentally, emotionally and practically ready to travel? And if not yet, where do you begin? Join 500+ women who have already downloaded it.</p>
+      <ul class="arrows">
+        <li>Mindset prompts to remind you that you deserve this</li>
+        <li>Soft check-ins on fear, guilt, and readiness</li>
+        <li>Essentials: docs, safety, budget and contacts</li>
+      </ul>
+      <p class="kit-more"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg> Want the Power-Packing Guide too? <a href="https://travelwithmkay.co.ke/travel-kit/">Get the full travel kit</a></p>
     </div>
-    <div class="kit-items">
-      <div class="kit-item"><div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></div><div><h3>Pre-Trip Confidence Checklist</h3><p>A quick check-in to see if you're mentally, emotionally, and practically ready to travel: mindset prompts, soft check-ins on fear and guilt, and the essentials.</p></div></div>
-      <div class="kit-item"><div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg></div><div><h3>Power-Packing Guide</h3><p>Pack lighter, travel smarter: a carry-on-friendly system, what to leave behind, and outfit formulas that work everywhere.</p></div></div>
+    <div class="formcard">
+      <h3>Free Pre-Trip Confidence Checklist for Women 40+</h3>
+      <p>“Am I really ready to travel?” Find out in a few honest ticks.</p>
+      <form class="cf7" action="https://travelwithmkay.co.ke/travel-kit/" method="get" data-endpoint="https://travelwithmkay.co.ke/wp-json/contact-form-7/v1/contact-forms/4081/feedback" novalidate>
+        <input type="hidden" name="_wpcf7" value="4081"><input type="hidden" name="_wpcf7_version" value="6.1.6"><input type="hidden" name="_wpcf7_locale" value="en_GB"><input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f4081-o2"><input type="hidden" name="_wpcf7_container_post" value="0">
+        <label for="cl-name">Name</label>
+        <input id="cl-name" name="your-name" type="text" placeholder="Your full name" autocomplete="name" required>
+        <span class="err" data-for="your-name"></span>
+        <label for="cl-email">Email</label>
+        <input id="cl-email" name="your-email" type="email" placeholder="name@example.com" autocomplete="email" required>
+        <span class="err" data-for="your-email"></span>
+        <button class="btn btn-grad" type="submit">Email My Free Guide</button>
+        <p class="form-note" role="status" aria-live="polite"></p>
+      </form>
+      <div class="thanks" hidden>
+        <h3>Thank you!</h3>
+        <p>Your Pre-Trip Confidence Checklist is on its way to your inbox. Please check your email in the next few minutes (and peek in spam or promotions, just in case). 💛</p>
+      </div>
     </div>
   </div>
 </section>
