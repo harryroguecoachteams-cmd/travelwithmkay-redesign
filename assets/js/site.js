@@ -1,5 +1,5 @@
-// Travel with Mkay v5 (v2 + liked v3 pieces + Harsh home notes): menu, header shadow, typed destination, testimonial players
-// offer tabs, world map sneak peeks, closing line. Everything degrades to readable static content without JS.
+// Travel with Mkay v6 (v5 + Harsh feedback 2, 13 Oct): menu, header shadow, typed destination, stats one by one,
+// featured logos stepping, testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -50,43 +50,98 @@
     if (reduce || saver) { hv.removeAttribute('autoplay'); hv.pause(); hv.remove(); }
   }
 
-  // Client videos load nothing until someone presses play
+  // Credibility band: the three stats arrive one by one, then their emoji take turns, in slow motion.
+  // Each emoji is a sprite strip; adding .play runs it once (CSS), animationend hands over to the next stat.
+  var cred = document.querySelector('.cred');
+  if (cred) {
+    var stats = $$('.stat', cred);
+    if (reduce || !('IntersectionObserver' in window)) {
+      stats.forEach(function (s) { s.classList.add('in'); });
+    } else {
+      var turn = -1, timer = null, running = false, first = true;
+      var next = function () {
+        stats.forEach(function (s) { s.classList.remove('on'); var e = s.querySelector('.emo-s'); if (e) e.classList.remove('play'); });
+        if (!running) return;
+        turn = (turn + 1) % stats.length;
+        var s = stats[turn], e = s.querySelector('.emo-s');
+        s.classList.add('on');
+        if (e) { void e.offsetWidth; e.classList.add('play'); }
+      };
+      stats.forEach(function (s) {
+        var e = s.querySelector('.emo-s');
+        if (e) e.addEventListener('animationend', function () { e.classList.remove('play'); s.classList.remove('on'); clearTimeout(timer); timer = setTimeout(next, 700); });
+      });
+      new IntersectionObserver(function (entries) {
+        var vis = entries[0].isIntersecting;
+        if (vis && first) stats.forEach(function (s, i) { setTimeout(function () { s.classList.add('in'); }, 200 + i * 450); });
+        if (vis && !running) { running = true; clearTimeout(timer); timer = setTimeout(next, first ? 1900 : 600); first = false; }
+        if (!vis && running) { running = false; clearTimeout(timer); next(); }
+      }, { threshold: 0.3 }).observe(cred);
+    }
+  }
+
+  // Featured logos: step one logo at a time, slowly; pause on hover or keyboard focus. Without JS the CSS loop runs.
+  $$('.cred .marquee').forEach(function (mq) {
+    var track = mq.querySelector('.marquee-track');
+    if (!track || reduce) return;
+    mq.classList.add('stepper');
+    var paused = false, busy = false;
+    var step = function () {
+      if (paused || busy || document.hidden || !track.firstElementChild) return;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      busy = true;
+      track.style.transition = 'transform 1.2s cubic-bezier(.65, 0, .35, 1)';
+      track.style.transform = 'translateX(' + -(track.firstElementChild.getBoundingClientRect().width + gap) + 'px)';
+    };
+    track.addEventListener('transitionend', function (e) {
+      if (e.target !== track || e.propertyName !== 'transform') return;
+      track.style.transition = 'none';
+      track.appendChild(track.firstElementChild);
+      track.style.transform = 'translateX(0)';
+      void track.offsetWidth;
+      busy = false;
+    });
+    mq.addEventListener('mouseenter', function () { paused = true; });
+    mq.addEventListener('mouseleave', function () { paused = false; });
+    mq.addEventListener('focusin', function () { paused = true; });
+    mq.addEventListener('focusout', function () { paused = false; });
+    setInterval(step, 2800);
+  });
+
+  // Client videos load nothing until someone presses play. Once playing, the overlay hides and the native
+  // controls take over (v6 fix: a CSS display rule beat [hidden], so the overlay stayed on top and swallowed pause).
   function pauseOthers(video) { $$('video').forEach(function (v) { if (v !== video && v !== hv) v.pause(); }); }
+  function start(video) {
+    pauseOthers(video);
+    video.controls = true;
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {});
+  }
   $$('.vmedia').forEach(function (box) {
     var btn = box.querySelector('.play');
     var video = box.querySelector('video');
     if (!btn || !video) return;
-    btn.addEventListener('click', function () {
-      pauseOthers(video);
-      btn.hidden = true;
-      video.controls = true;
-      video.play();
-      video.focus();
-    });
-  });
-  $$('.play-big').forEach(function (btn) {
-    var video = btn.parentElement.querySelector('video');
-    if (!video) return;
-    btn.addEventListener('click', function () {
-      pauseOthers(video);
-      btn.hidden = true; video.controls = true; video.play(); video.focus();
-    });
+    btn.addEventListener('click', function () { start(video); video.focus(); });
+    video.addEventListener('play', function () { btn.hidden = true; });
   });
 
-  // Testimonial theater: pick a story from the reel, it plays on the stage
+  // Testimonial theater: pick a story from the reel, it plays on the stage. The big button shows whenever it is paused.
   var stage = document.querySelector('.stage');
   if (stage) {
     var sv = stage.querySelector('video'), sb = stage.querySelector('.play-big');
     var quote = document.querySelector('.now blockquote'), who = document.querySelector('.now cite');
+    sb.addEventListener('click', function () { start(sv); });
+    sv.addEventListener('click', function () { if (!sv.controls) start(sv); });
+    sv.addEventListener('play', function () { sb.hidden = true; });
+    sv.addEventListener('pause', function () { sb.hidden = false; });
     $$('.reel button').forEach(function (b) {
       b.addEventListener('click', function () {
         $$('.reel button').forEach(function (o) { o.setAttribute('aria-current', 'false'); });
         b.setAttribute('aria-current', 'true');
-        pauseOthers(sv);
-        sv.pause(); sv.src = b.getAttribute('data-src'); sv.poster = b.getAttribute('data-poster');
+        sv.src = b.getAttribute('data-src'); sv.poster = b.getAttribute('data-poster');
         var tr = sv.querySelector('track'); if (tr) tr.src = b.getAttribute('data-vtt');
         quote.textContent = b.getAttribute('data-quote'); who.textContent = b.getAttribute('data-who');
-        sb.hidden = true; sv.controls = true; sv.play();
+        start(sv);
       });
     });
   }
