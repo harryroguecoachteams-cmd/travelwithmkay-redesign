@@ -857,28 +857,6 @@ p { margin: 0 0 1em; }
 .topbar .tb-emoji { width: 18px; height: 18px; flex: none; transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
 .topbar a:hover .tb-emoji { transform: translate(3px, -2px); }
 
-/* Featured logos: all on show; each takes its turn to rise, slowly, one after another (no marquee).
-   One turn = --step; the rise uses 9% of the cycle, which is just under one step, so turns never overlap. */
-.cred .press { flex-direction: column; align-items: center; gap: 16px; }
-.cred .logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; --step: 1.6s; }
-.cred .lg { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; }
-.cred .logos a { flex: none; display: flex; align-items: center; height: 50px; padding: 7px 13px; border-radius: 10px; background: #fff;
-  animation: logo-turn calc((var(--n) + 1) * var(--step)) ease-in-out infinite; animation-delay: calc(var(--i) * var(--step)); }
-.cred .logos img { height: 28px; width: auto; max-width: 124px; object-fit: contain; }
-.cred .logos a.pod { width: 50px; padding: 5px; border-radius: 12px; }
-.cred .logos a.pod img { width: 40px; height: 40px; max-width: none; border-radius: 8px; object-fit: cover; }
-@keyframes logo-turn { 0%, 9%, 100% { transform: none; } 4.5% { transform: translateY(-9px) scale(1.07); } }
-.cred .logos:hover a, .cred .logos:focus-within a { animation-play-state: paused; }
-.cred .logos a:hover, .cred .logos a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .cred .logos a { animation: none; } }
-@media (max-width: 640px) {
-  .cred .logos, .cred .lg { gap: 9px; }
-  .cred .logos a { height: 42px; padding: 6px 10px; }
-  .cred .logos img { height: 22px; max-width: 100px; }
-  .cred .logos a.pod { width: 42px; padding: 4px; }
-  .cred .logos a.pod img { width: 34px; height: 34px; }
-}
-
 /* Client videos: the Watch button sits on the video itself, clear of the name printed under it */
 .play { align-items: flex-end; justify-content: center; padding: 0 0 31%; background: transparent; }
 .play span { box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .7); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
@@ -954,10 +932,4 @@ p { margin: 0 0 1em; }
   .pcard.row .pdate { display: block; margin-top: 2px; }
   .pcard.row .pdot { display: none; }
   .pcard.row .pbody .links { gap: 4px 14px; }
-}
-/* Phones: press logos in an even 2 x 2 grid of equal tiles (no lone logo on a row) */
-@media (max-width: 560px) {
-  .cred .logos { width: 100%; }
-  .cred .lg:not(.lg-pod) { display: grid; grid-template-columns: 1fr 1fr; width: 100%; max-width: 340px; }
-  .cred .lg:not(.lg-pod) a { justify-content: center; }
 }
