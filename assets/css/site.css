@@ -82,7 +82,7 @@ p { margin: 0 0 1em; }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--orange-ink); }
 .nav .btn { font-family: var(--body); color: #fff; min-height: 44px; padding: 10px 20px; font-size: .98rem; }
 .menu-toggle { display: none; }
-@media (max-width: 1080px) {
+@media (max-width: 1000px) {
   .menu-toggle { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border: 2px solid var(--navy); border-radius: 999px; background: none; color: var(--navy); font: 700 1rem var(--body); cursor: pointer; }
   .nav { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0; background: var(--sand); padding: 6px var(--gutter) 20px; box-shadow: 0 12px 24px -16px rgba(0, 0, 0, .3); }
   .nav.open { display: flex; }
@@ -531,7 +531,7 @@ p { margin: 0 0 1em; }
 .nav .nav-cta { margin-left: auto; min-height: 42px; padding: 9px 20px; gap: 8px; font: 700 .93rem/1.2 var(--body); box-shadow: none; }
 .nav .nav-cta:hover { box-shadow: 0 10px 20px -12px rgba(232, 54, 76, .75); }
 .nav .nav-cta .icon { width: 14px; height: 14px; }
-@media (max-width: 1080px) {
+@media (max-width: 1000px) {
   .menu-toggle { width: 44px; height: 44px; padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 4px; border: 1.5px solid rgba(0, 31, 120, .35); border-radius: 50%; }
   .menu-toggle span { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--navy); transition: transform .2s, opacity .2s; }
   .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -672,7 +672,7 @@ p { margin: 0 0 1em; }
 .opt:hover .o-go { background: var(--navy); transform: translateX(2px); }
 .tabs button { transition: border-color .2s, background-color .2s; }
 .tabs button:hover { border-color: rgba(0, 31, 120, .45); }
-@media (max-width: 1080px) {
+@media (max-width: 1000px) {
   .nav a:not(.btn) { transition: background-color .2s, padding-left .2s; }
   .nav a:not(.btn):hover { padding-left: 8px; }
   .nav a[aria-current="page"] { font-weight: 800; }
@@ -681,16 +681,17 @@ p { margin: 0 0 1em; }
 /* Top bar: a still plane (the animated emoji kept glowing) */
 .topbar .tb-plane { width: 15px; height: 15px; }
 
-/* Credibility band: the stats arrive one by one, then each emoji plays in turn, slowly (site.js) */
+/* Credibility band: the stats arrive one by one, then each emoji plays in turn, slowly (site.js). The running state is
+   .emo-run, NOT .play: .play is the video overlay button (position:absolute; inset:0), and sharing it threw the emoji to the page corner. */
 .emo-s { display: block; flex: none; width: 66px; height: 66px; padding: 7px; border-radius: 50%; background-color: rgba(255, 255, 255, .07);
   background-repeat: no-repeat; background-origin: content-box; background-size: auto 100%; background-position: 0 0;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: background-color .6s ease, box-shadow .6s ease; }
-.emo-s.play { animation: emo-steps var(--d) steps(var(--n), jump-none) var(--loops); }
+.emo-s.emo-run { animation: emo-steps var(--d) steps(var(--n), jump-none) var(--loops); }
 @keyframes emo-steps { from { background-position: 0 0; } to { background-position: 100% 0; } }
 .cred .stat.on .emo-s { background-color: rgba(255, 179, 71, .13); box-shadow: inset 0 0 0 1px rgba(255, 179, 71, .4); }
 .js .cred .stat { opacity: 0; transform: translateY(16px); transition: opacity 1s ease, transform 1s cubic-bezier(.2, .8, .2, 1); }
 .js .cred .stat.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .js .cred .stat { opacity: 1; transform: none; transition: none; } .emo-s.play { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .js .cred .stat { opacity: 1; transform: none; transition: none; } .emo-s.emo-run { animation: none; } }
 @media (max-width: 640px) { .emo-s { width: 54px; height: 54px; padding: 6px; } }
 
 /* Featured logos: one at a time, slower (site.js steps the track; the CSS loop is only the no-JS fallback) */
@@ -835,3 +836,128 @@ p { margin: 0 0 1em; }
 .swipe-hint { display: none; }
 @media (max-width: 560px) { .swipe-hint { display: block; margin: -8px 0 0; text-align: center; font: 900 .72rem var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); } }
 .nowrap { white-space: nowrap; }
+
+/* ================= v7: Harsh's answers + whole-design recheck (13 Oct 2026) ================= */
+
+/* Gradient buttons: hover deepens the same orange-to-pink gradient (no navy, no glow) and the plane takes off */
+.btn-grad::before, .hero .btn-grad::before, .bg-midnight .btn-grad::before, .cta-final .btn-grad::before, .why-now .btn-grad::before,
+.faq-side .card .btn-grad::before, .offer-panel .side .btn-grad::before { background: var(--grad-hover); }
+:root { --grad-hover: linear-gradient(90deg, #CC6418 0%, #D92E46 100%); }  /* same hues, a step deeper: white text reads better */
+.btn-grad:hover, .hero .btn-grad:hover, .bg-midnight .btn-grad:hover, .cta-final .btn-grad:hover, .why-now .btn-grad:hover,
+.faq-side .card .btn-grad:hover, .offer-panel .side .btn-grad:hover { color: #fff; box-shadow: 0 12px 24px -14px rgba(10, 35, 66, .6); }
+.nav .nav-cta:hover { box-shadow: 0 10px 20px -14px rgba(10, 35, 66, .6); }
+/* The header button's text stays white: the old menu rule (.nav a:hover) used to turn it dark orange */
+.nav a.nav-cta:hover, .nav a.nav-cta:focus-visible, .nav a.nav-cta[aria-current] { color: #fff; }
+/* No 2 px ring of the old gradient around a hovered button (the hover layer can't paint under the border) */
+.btn-grad { border: 0; }
+.btn .i-plane { transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.btn:hover .i-plane, .btn:focus-visible .i-plane { transform: translate(4px, -3px) rotate(-8deg); }
+
+/* Top bar: the airplane emoji is back, as a still (the animated one flashed clouds across itself) */
+.topbar .tb-emoji { width: 18px; height: 18px; flex: none; transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.topbar a:hover .tb-emoji { transform: translate(3px, -2px); }
+
+/* Featured logos: all on show; each takes its turn to rise, slowly, one after another (no marquee).
+   One turn = --step; the rise uses 9% of the cycle, which is just under one step, so turns never overlap. */
+.cred .press { flex-direction: column; align-items: center; gap: 16px; }
+.cred .logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; --step: 1.6s; }
+.cred .lg { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; }
+.cred .logos a { flex: none; display: flex; align-items: center; height: 50px; padding: 7px 13px; border-radius: 10px; background: #fff;
+  animation: logo-turn calc((var(--n) + 1) * var(--step)) ease-in-out infinite; animation-delay: calc(var(--i) * var(--step)); }
+.cred .logos img { height: 28px; width: auto; max-width: 124px; object-fit: contain; }
+.cred .logos a.pod { width: 50px; padding: 5px; border-radius: 12px; }
+.cred .logos a.pod img { width: 40px; height: 40px; max-width: none; border-radius: 8px; object-fit: cover; }
+@keyframes logo-turn { 0%, 9%, 100% { transform: none; } 4.5% { transform: translateY(-9px) scale(1.07); } }
+.cred .logos:hover a, .cred .logos:focus-within a { animation-play-state: paused; }
+.cred .logos a:hover, .cred .logos a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .cred .logos a { animation: none; } }
+@media (max-width: 640px) {
+  .cred .logos, .cred .lg { gap: 9px; }
+  .cred .logos a { height: 42px; padding: 6px 10px; }
+  .cred .logos img { height: 22px; max-width: 100px; }
+  .cred .logos a.pod { width: 42px; padding: 4px; }
+  .cred .logos a.pod img { width: 34px; height: 34px; }
+}
+
+/* Client videos: the Watch button sits on the video itself, clear of the name printed under it */
+.play { align-items: flex-end; justify-content: center; padding: 0 0 31%; background: transparent; }
+.play span { box-shadow: 0 12px 26px -12px rgba(0, 0, 0, .7); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+.play:hover span, .play:focus-visible span { transform: scale(1.06); }
+
+/* Home podcast rows: a square cover (no more sliced titles), the date beside the show name, one tidy link row */
+.pcard.row { align-items: center; }
+.pcard.row .cover { width: 136px; height: 136px; flex: none; align-self: center; margin: 16px 0 16px 16px; border-radius: 12px; aspect-ratio: 1 / 1; }
+.pcard.row .cover img { width: 100%; height: 100%; }
+.pdate { color: var(--ink-soft); white-space: nowrap; }
+@media (max-width: 560px) { .pcard.row { align-items: flex-start; } .pcard.row .cover { width: 92px; height: 92px; margin: 16px 0 0 16px; } .pcard.row .links .more { display: inline-flex; } }
+
+/* How I help: the caption sits under the photo, so nothing covers me and the view */
+.help-photo { background: #fff; }
+.help-photo img { aspect-ratio: 5 / 4; object-position: 56% 60%; }
+.help-photo figcaption { position: relative; padding: 16px 22px 18px 26px; background: #fff; color: var(--navy); font: italic 600 1.08rem/1.45 var(--display); }
+.help-photo figcaption::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 0 4px 4px 0; background: var(--grad); }
+@media (max-width: 900px) { .help-photo img { aspect-ratio: 16 / 9; } }
+
+/* About: the Grand Canyon card keeps my face in frame */
+.moment img[src*="grand-canyon"] { object-position: 50% 8%; }
+
+/* Inner page heroes: no 44 px grid gaps between kicker, title and lead; a faint world map behind them */
+.page-hero.solo { position: relative; overflow: hidden; isolation: isolate; padding: clamp(56px, 7vw, 88px) 0 clamp(48px, 6vw, 72px); }
+.page-hero.solo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url(../img/world-dotmap.webp) center 58% / min(1400px, 140%) auto no-repeat; opacity: .07;
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, transparent 30%, #000 75%); mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, transparent 30%, #000 75%); }
+.page-hero.solo .wrap { gap: 0; }
+.page-hero.solo h1 { margin-top: 10px; }
+.page-hero.solo p.lead { margin: 18px auto 0; max-width: 62ch; }
+.page-hero.solo .hero-actions { margin-top: 28px; }
+
+/* Boarding passes: place names never break ("A calm / plan"), the dotted route takes the slack */
+.route { grid-template-columns: auto 1fr auto; }
+.route > span { white-space: nowrap; }
+.route i { justify-content: center; }
+.route i::before, .route i::after { flex: 1; width: auto; min-width: 6px; max-width: 26px; }
+
+/* Why now: the $10 call's promise fills the card; full width (and two columns) below 1180 px */
+.why-now-body { display: grid; gap: 16px; }
+.why-now-call { background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); border-radius: 14px; padding: 14px 16px 12px; }
+.why-now-call .lbl { font: 900 .7rem var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+.why-card .why-now-call ul { gap: 6px; margin-top: 8px; }
+.why-card .why-now-call li { color: #E4E9F3; font-size: .95rem; padding-left: 24px; }
+.why-card .why-now-call li::before { top: .42em; left: 2px; width: 11px; height: 6px; border-radius: 0; background: none; border-left: 2px solid var(--amber); border-bottom: 2px solid var(--amber); transform: rotate(-45deg); }
+@media (max-width: 1180px) {
+  .why { grid-template-columns: 1fr 1fr; }
+  .why-card.why-now { grid-column: 1 / -1; }
+  .why-now-body { grid-template-columns: 1.15fr .85fr; align-items: start; column-gap: 28px; }
+}
+@media (max-width: 640px) { .why { grid-template-columns: 1fr; } .why-now-body { grid-template-columns: 1fr; } }
+.btn { white-space: nowrap; }
+#going-cta { white-space: normal; }  /* repeats whatever destination is typed, so it may need two lines */
+@media (max-width: 380px) { .btn { white-space: normal; text-align: center; } }
+
+/* Menu: full links down to 1001 px, a little tighter below 1180 px */
+@media (max-width: 1180px) and (min-width: 1001px) { .nav { gap: 22px; } .site-header .wrap { gap: 20px; } }
+
+/* Typed destination: a slimmer caret, so it doesn't read as a space before the full stop */
+.typed { padding-right: 2px; border-right-width: 2px; }
+
+/* Phones: tap targets of 40 px or more */
+@media (max-width: 640px) {
+  .socials { gap: 12px; }
+  .socials a { width: 42px; height: 42px; }
+  .socials .icon { width: 18px; height: 18px; }
+  .pbody .links a.more, .tool a, .kit-more a { display: inline-flex; align-items: center; min-height: 40px; }
+  .site-footer ul { gap: 0; }
+  .site-footer li a { display: inline-block; padding: 7px 0; }
+}
+
+/* Phones: the podcast date drops under the show name (no lone "·" at a line start); short podcast rows */
+@media (max-width: 560px) {
+  .pcard.row .pdate { display: block; margin-top: 2px; }
+  .pcard.row .pdot { display: none; }
+  .pcard.row .pbody .links { gap: 4px 14px; }
+}
+/* Phones: press logos in an even 2 x 2 grid of equal tiles (no lone logo on a row) */
+@media (max-width: 560px) {
+  .cred .logos { width: 100%; }
+  .cred .lg:not(.lg-pod) { display: grid; grid-template-columns: 1fr 1fr; width: 100%; max-width: 340px; }
+  .cred .lg:not(.lg-pod) a { justify-content: center; }
+}
