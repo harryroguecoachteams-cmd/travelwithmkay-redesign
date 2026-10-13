@@ -1,4 +1,4 @@
-// Travel with Mkay v8 (13 Oct): menu, header shadow, typed destination, stats one by one, featured logos sliding
+// Travel with Mkay v9 (13 Oct): menu, header shadow, typed destination, stats one by one (emoji on hover), featured logos sliding
 // one at a time, testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -50,34 +50,27 @@
     if (reduce || saver) { hv.removeAttribute('autoplay'); hv.pause(); hv.remove(); }
   }
 
-  // Credibility band: the three stats arrive one by one, then their emoji take turns, in slow motion.
-  // Each emoji is a sprite strip; adding .emo-run runs it once (CSS), animationend hands over to the next stat.
+  // Credibility band: the three stats arrive one by one. v9 (13 Oct): the emoji move only when asked: while the mouse is
+  // on a stat (CSS :hover, mouse screens only), or once per tap on touch screens (.emo-run here). Nothing moves on its own.
   var cred = document.querySelector('.cred');
   if (cred) {
     var stats = $$('.stat', cred);
     if (reduce || !('IntersectionObserver' in window)) {
       stats.forEach(function (s) { s.classList.add('in'); });
     } else {
-      var turn = -1, timer = null, running = false, first = true;
-      var next = function () {
-        stats.forEach(function (s) { s.classList.remove('on'); var e = s.querySelector('.emo-s'); if (e) e.classList.remove('emo-run'); });
-        if (!running) return;
-        turn = (turn + 1) % stats.length;
-        var s = stats[turn], e = s.querySelector('.emo-s');
-        s.classList.add('on');
-        if (e) { void e.offsetWidth; e.classList.add('emo-run'); }
-      };
-      stats.forEach(function (s) {
-        var e = s.querySelector('.emo-s');
-        if (e) e.addEventListener('animationend', function () { e.classList.remove('emo-run'); s.classList.remove('on'); clearTimeout(timer); timer = setTimeout(next, 700); });
-      });
-      new IntersectionObserver(function (entries) {
-        var vis = entries[0].isIntersecting;
-        if (vis && first) stats.forEach(function (s, i) { setTimeout(function () { s.classList.add('in'); }, 200 + i * 450); });
-        if (vis && !running) { running = true; clearTimeout(timer); timer = setTimeout(next, first ? 1900 : 600); first = false; }
-        if (!vis && running) { running = false; clearTimeout(timer); next(); }
-      }, { threshold: 0.3 }).observe(cred);
+      var io = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        stats.forEach(function (s, i) { setTimeout(function () { s.classList.add('in'); }, 200 + i * 450); });
+        io.disconnect();
+      }, { threshold: 0.3 });
+      io.observe(cred);
     }
+    if (!reduce) stats.forEach(function (s) {
+      var e = s.querySelector('.emo-s');
+      if (!e) return;
+      s.addEventListener('touchstart', function () { e.classList.remove('emo-run'); void e.offsetWidth; e.classList.add('emo-run'); }, { passive: true });
+      e.addEventListener('animationend', function () { e.classList.remove('emo-run'); });
+    });
   }
 
   // Featured logos (v6 slider, back in v8): slide one logo at a time, slowly; pause on hover or keyboard focus.

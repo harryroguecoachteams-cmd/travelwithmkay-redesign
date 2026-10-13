@@ -933,3 +933,36 @@ p { margin: 0 0 1em; }
   .pcard.row .pdot { display: none; }
   .pcard.row .pbody .links { gap: 4px 14px; }
 }
+
+/* v9 (13 Oct 2026): the stat emoji move only when asked. Mouse screens: while the pointer is on the stat.
+   Touch screens: a tap plays it once (site.js adds .emo-run). Nothing moves on its own any more. */
+@media (hover: hover) {
+  .cred .stat:hover .emo-s { animation: emo-steps var(--d) steps(var(--n), jump-none) infinite; background-color: rgba(255, 179, 71, .13); box-shadow: inset 0 0 0 1px rgba(255, 179, 71, .4); }
+}
+@media (prefers-reduced-motion: reduce) { .cred .stat:hover .emo-s { animation: none; } }
+
+/* About: quick facts under the intro */
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; padding: 0; list-style: none; }
+.facts li { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-weight: 700; color: var(--navy); font-size: .92rem; }
+.facts li b { color: var(--orange-ink); }
+
+/* About: what travel taught me (four lessons) */
+.lessons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.lesson { background: var(--cream-2); border-radius: 20px; padding: 26px 22px; }
+.lesson .why-ic { margin-bottom: 16px; }
+.lesson h3 { font-size: 1.22rem; line-height: 1.25; margin: 0 0 10px; }
+.lesson p { color: var(--ink-soft); margin: 0; }
+@media (max-width: 1000px) { .lessons { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .lessons { grid-template-columns: 1fr; } }
+
+/* About: your trips, your way + why I write */
+.yourway { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; align-items: stretch; }
+.yourway .why-card p { color: var(--ink-soft); margin: 0 0 14px; }
+.yourway .why-card.why-now p { color: #C3CDE0; }
+.pace { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.pace div { background: var(--cream-2); border-radius: 14px; padding: 14px 16px; border-left: 3px solid var(--orange); }
+.pace b { display: block; color: var(--navy); margin-bottom: 2px; }
+.pace span { color: var(--ink-soft); font-size: .95rem; }
+@media (max-width: 900px) { .yourway { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .pace { grid-template-columns: 1fr; } }
+.yourway .why-card.why-now .btn { margin-top: 8px; }
