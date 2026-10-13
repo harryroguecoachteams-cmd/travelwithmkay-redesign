@@ -1,5 +1,5 @@
-// Travel with Mkay v7 (13 Oct): menu, header shadow, typed destination, stats one by one (the featured logos take
-// their turns in CSS), testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
+// Travel with Mkay v8 (13 Oct): menu, header shadow, typed destination, stats one by one, featured logos sliding
+// one at a time, testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -79,6 +79,40 @@
       }, { threshold: 0.3 }).observe(cred);
     }
   }
+
+  // Featured logos (v6 slider, back in v8): slide one logo at a time, slowly; pause on hover or keyboard focus.
+  // Without JS the CSS loop runs; with reduced motion the logos sit still.
+  $$('.cred .marquee').forEach(function (mq) {
+    var track = mq.querySelector('.marquee-track');
+    if (!track || reduce) return;
+    mq.classList.add('stepper');
+    var paused = false, busy = false, safety = null;
+    var finish = function () {
+      if (!busy) return;
+      clearTimeout(safety);
+      track.style.transition = 'none';
+      track.appendChild(track.firstElementChild);
+      track.style.transform = 'translateX(0)';
+      void track.offsetWidth;
+      busy = false;
+    };
+    var step = function () {
+      if (paused || busy || document.hidden || !track.firstElementChild) return;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      busy = true;
+      track.style.transition = 'transform 1.2s cubic-bezier(.65, 0, .35, 1)';
+      track.style.transform = 'translateX(' + -(track.firstElementChild.getBoundingClientRect().width + gap) + 'px)';
+      safety = setTimeout(finish, 1600);  // in case transitionend never fires (tab hidden mid-slide)
+    };
+    track.addEventListener('transitionend', function (e) {
+      if (e.target === track && e.propertyName === 'transform') finish();
+    });
+    mq.addEventListener('mouseenter', function () { paused = true; });
+    mq.addEventListener('mouseleave', function () { paused = false; });
+    mq.addEventListener('focusin', function () { paused = true; });
+    mq.addEventListener('focusout', function () { paused = false; });
+    setInterval(step, 2800);
+  });
 
   // Client videos load nothing until someone presses play. Once playing, the overlay hides and the native
   // controls take over (v6 fix: a CSS display rule beat [hidden], so the overlay stayed on top and swallowed pause).
