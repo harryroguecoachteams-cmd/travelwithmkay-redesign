@@ -1,5 +1,5 @@
-// Travel with Mkay v6 (v5 + Harsh feedback 2, 13 Oct): menu, header shadow, typed destination, stats one by one,
-// featured logos stepping, testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
+// Travel with Mkay v7 (13 Oct): menu, header shadow, typed destination, stats one by one (the featured logos take
+// their turns in CSS), testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -51,7 +51,7 @@
   }
 
   // Credibility band: the three stats arrive one by one, then their emoji take turns, in slow motion.
-  // Each emoji is a sprite strip; adding .play runs it once (CSS), animationend hands over to the next stat.
+  // Each emoji is a sprite strip; adding .emo-run runs it once (CSS), animationend hands over to the next stat.
   var cred = document.querySelector('.cred');
   if (cred) {
     var stats = $$('.stat', cred);
@@ -60,16 +60,16 @@
     } else {
       var turn = -1, timer = null, running = false, first = true;
       var next = function () {
-        stats.forEach(function (s) { s.classList.remove('on'); var e = s.querySelector('.emo-s'); if (e) e.classList.remove('play'); });
+        stats.forEach(function (s) { s.classList.remove('on'); var e = s.querySelector('.emo-s'); if (e) e.classList.remove('emo-run'); });
         if (!running) return;
         turn = (turn + 1) % stats.length;
         var s = stats[turn], e = s.querySelector('.emo-s');
         s.classList.add('on');
-        if (e) { void e.offsetWidth; e.classList.add('play'); }
+        if (e) { void e.offsetWidth; e.classList.add('emo-run'); }
       };
       stats.forEach(function (s) {
         var e = s.querySelector('.emo-s');
-        if (e) e.addEventListener('animationend', function () { e.classList.remove('play'); s.classList.remove('on'); clearTimeout(timer); timer = setTimeout(next, 700); });
+        if (e) e.addEventListener('animationend', function () { e.classList.remove('emo-run'); s.classList.remove('on'); clearTimeout(timer); timer = setTimeout(next, 700); });
       });
       new IntersectionObserver(function (entries) {
         var vis = entries[0].isIntersecting;
@@ -79,34 +79,6 @@
       }, { threshold: 0.3 }).observe(cred);
     }
   }
-
-  // Featured logos: step one logo at a time, slowly; pause on hover or keyboard focus. Without JS the CSS loop runs.
-  $$('.cred .marquee').forEach(function (mq) {
-    var track = mq.querySelector('.marquee-track');
-    if (!track || reduce) return;
-    mq.classList.add('stepper');
-    var paused = false, busy = false;
-    var step = function () {
-      if (paused || busy || document.hidden || !track.firstElementChild) return;
-      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-      busy = true;
-      track.style.transition = 'transform 1.2s cubic-bezier(.65, 0, .35, 1)';
-      track.style.transform = 'translateX(' + -(track.firstElementChild.getBoundingClientRect().width + gap) + 'px)';
-    };
-    track.addEventListener('transitionend', function (e) {
-      if (e.target !== track || e.propertyName !== 'transform') return;
-      track.style.transition = 'none';
-      track.appendChild(track.firstElementChild);
-      track.style.transform = 'translateX(0)';
-      void track.offsetWidth;
-      busy = false;
-    });
-    mq.addEventListener('mouseenter', function () { paused = true; });
-    mq.addEventListener('mouseleave', function () { paused = false; });
-    mq.addEventListener('focusin', function () { paused = true; });
-    mq.addEventListener('focusout', function () { paused = false; });
-    setInterval(step, 2800);
-  });
 
   // Client videos load nothing until someone presses play. Once playing, the overlay hides and the native
   // controls take over (v6 fix: a CSS display rule beat [hidden], so the overlay stayed on top and swallowed pause).
