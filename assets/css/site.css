@@ -966,3 +966,149 @@ p { margin: 0 0 1em; }
 @media (max-width: 900px) { .yourway { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { .pace { grid-template-columns: 1fr; } }
 .yourway .why-card.why-now .btn { margin-top: 8px; }
+
+/* ================= v10 (20 Oct 2026): Maria's review + Harsh's notes ================= */
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Menu: seven links now (Featured In + Newsletter), so tighten before the hamburger takes over at 1000 px */
+@media (max-width: 1320px) and (min-width: 1001px) { .nav { gap: 20px; } .nav a:not(.btn) { font-size: .93rem; } .site-header .wrap { gap: 18px; } }
+@media (max-width: 1120px) and (min-width: 1001px) { .nav { gap: 15px; } .nav a:not(.btn) { font-size: .9rem; } .nav .btn { padding: 10px 16px; font-size: .92rem; } }
+
+/* Home intro: her 100-countries poster, square, links to the map (the poster says "Check my full journey") */
+.frame-poster { display: block; transition: transform .3s ease, box-shadow .3s ease; }
+.frame-poster img { aspect-ratio: 1 / 1; }
+.frame-poster:hover { transform: translateY(-4px); box-shadow: 0 28px 52px -24px rgba(10, 35, 66, .6); }
+.frame-poster:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
+
+/* What a travel coach does: one-line definition, agent vs coach at a glance, the questions we start with */
+.head .lead .define { color: var(--navy); font-weight: 700; }
+.cmp-wrap { display: grid; grid-template-columns: 1.45fr 1fr; gap: 22px; margin: 0 0 clamp(34px, 5vw, 50px); align-items: stretch; }
+.cmp { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+.cmp-row { display: grid; grid-template-columns: .8fr 1fr 1.25fr; align-items: stretch; border-top: 1px solid var(--line); }
+.cmp-row:first-child { border-top: 0; }
+.cmp-row > span { padding: 14px 18px; font-size: .98rem; line-height: 1.45; }
+.cmp-k { font: 900 .74rem/1.4 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); display: flex; align-items: center; }
+.cmp-a { color: var(--ink-soft); }
+.cmp-c { color: var(--navy); font-weight: 700; background: var(--cream-2); border-left: 3px solid var(--orange); }
+.cmp-head > span { font-family: var(--display); font-weight: 700; font-size: 1.08rem; color: var(--navy); padding-top: 18px; padding-bottom: 16px; }
+.cmp-head .cmp-a { color: #6B7280; }
+.cmp-head .cmp-c { background: var(--navy); color: #fff; border-left-color: var(--navy); }
+.cmp-head .cmp-c small { font: 700 .78rem var(--body); color: var(--amber); letter-spacing: .02em; }
+.cmp-q { background: linear-gradient(170deg, var(--navy) 0%, var(--midnight) 100%); color: #DCE3F0; border-radius: 20px; padding: clamp(22px, 3vw, 32px); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center; }
+.cmp-q h3 { color: #fff; font-size: clamp(1.3rem, 2.1vw, 1.55rem); margin-bottom: 14px; }
+.cmp-q ul { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 14px; }
+.cmp-q li { font: italic 600 1.06rem/1.4 var(--display); color: #fff; padding-left: 26px; position: relative; }
+.cmp-q li::before { content: "?"; position: absolute; left: 0; top: 1px; width: 18px; height: 18px; border-radius: 50%; background: var(--amber); color: var(--navy); font: 900 .72rem/18px var(--body); text-align: center; font-style: normal; }
+.cmp-q p { margin: 0; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, .14); color: #C3CDE0; font-size: .97rem; }
+@media (max-width: 1000px) { .cmp-wrap { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .cmp-row { grid-template-columns: 1fr 1fr; }
+  .cmp-row .cmp-k { grid-column: 1 / -1; padding: 12px 14px 2px; background: #fff; }
+  .cmp-row > span { padding: 8px 14px 12px; font-size: .93rem; }
+  .cmp-head { display: none; }
+  .cmp-a::before, .cmp-c::before { display: block; font: 900 .66rem/1.3 var(--body); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 3px; }
+  .cmp-a::before { content: "Travel agent"; color: #7A8090; }
+  .cmp-c::before { content: "Travel coach"; color: var(--orange-ink); }
+}
+.ai-band .ai-line { font: italic 700 clamp(1.2rem, 2vw, 1.45rem)/1.35 var(--display); color: #fff; margin-top: 10px; }
+.ai-band .ai-line i { color: var(--amber); }
+
+/* Featured strip: say out loud that the logos open real pieces */
+.cred .press-more { margin: 16px 0 0; text-align: right; font-size: .92rem; color: #8E9BB8; }
+.cred .press-more a { color: var(--amber); font-weight: 700; text-decoration: none; border-bottom: 1px solid rgba(255, 179, 71, .45); }
+.cred .press-more a:hover { color: #fff; border-bottom-color: #fff; }
+@media (max-width: 700px) { .cred .press-more { text-align: center; } }
+
+/* Services: offer side note under the button (the private track is booked on the bootcamp page) */
+.offer-panel .side .cta-note { color: #AEBAD3; font-size: .86rem; margin-top: -4px; }
+
+/* Services: AI vs me live example (her live copy and ChatGPT screen recording), same-trip story */
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.vs-card { border-radius: 20px; padding: 28px 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; }
+.vs-card.ai { background: #fff; border: 1px solid var(--line); }
+.vs-card.me { background: var(--sand-2); border: 2px solid var(--sand); }
+.vs-card p { margin: 0; }
+.vs-card .pill { align-self: flex-start; font: 900 .72rem var(--body); letter-spacing: .14em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
+.vs-card.ai .pill { background: #EDEFF3; color: #4B5263; }
+.vs-card.me .pill { background: var(--navy); color: #fff; }
+.vs-card ul { margin: 0; padding-left: 20px; }
+.vs-card li { margin-bottom: 6px; }
+.vs-card .verdict { font-weight: 700; color: var(--navy); }
+.vs-card video { border-radius: 14px; background: #000; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.vs-quote { margin: auto 0 0; background: #fff; border-radius: 16px; padding: 20px 22px; border-left: 4px solid var(--orange); }
+.vs-quote blockquote { margin: 0 0 8px; font: italic 600 1.18rem/1.4 var(--display); color: var(--navy); }
+.vs-quote figcaption { font-size: .9rem; color: var(--ink-soft); font-weight: 700; }
+.vs-story-head { margin-top: clamp(50px, 6vw, 80px); }
+.vs-story-head h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); margin-bottom: 22px; }
+.vs-toggle { display: inline-flex; flex-wrap: wrap; justify-content: center; background: #fff; border-radius: 999px; padding: 6px; box-shadow: var(--shadow); gap: 4px; margin: 0 auto 26px; }
+.vs-toggle button { border: 0; background: transparent; padding: 12px 22px; min-height: 44px; border-radius: 999px; font: 700 1rem var(--body); color: var(--ink-soft); cursor: pointer; }
+.vs-toggle button:hover { color: var(--navy); }
+.vs-toggle button[aria-selected="true"] { background: var(--navy); color: #fff; }
+.vs-toggle button:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+.story-panel { background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); padding: clamp(24px, 4vw, 44px); display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(20px, 4vw, 48px); }
+.story-panel[hidden] { display: none; }
+.story-panel .sp-profile { border-right: 1px solid var(--line); padding-right: clamp(16px, 3vw, 36px); }
+.story-panel h4 { font-size: 1.15rem; margin: 0 0 10px; }
+.story-panel ul { margin: 0 0 16px; padding-left: 20px; }
+.story-panel li { margin-bottom: 6px; }
+.story-panel .sp-bad h4 { color: #8A3B2B; }
+.story-panel .sp-good h4 { color: var(--teal-ink); }
+@media (max-width: 860px) { .vs { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .story-panel { grid-template-columns: 1fr; } .story-panel .sp-profile { border-right: 0; padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 16px; } }
+@media (max-width: 480px) { .vs-toggle { border-radius: 18px; } .vs-toggle button { flex: 1 1 100%; } }
+
+/* Featured In: published articles */
+.agrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.acard { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
+.alogo { display: flex; align-items: center; justify-content: center; height: 118px; background: var(--cream-2); border-bottom: 1px solid var(--line); padding: 18px 26px; }
+.alogo img { max-height: 58px; max-width: 78%; width: auto; height: auto; object-fit: contain; }
+.abody { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.abody .show { font: 900 .74rem/1.4 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--orange-ink); }
+.abody h3 { font-size: 1.22rem; line-height: 1.3; }
+.abody h3 a { color: var(--navy); text-decoration: none; }
+.abody h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.abody p { margin: 0; color: var(--ink-soft); font-size: .97rem; }
+.abody .links { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.abody .links .btn { min-height: 42px; padding: 8px 18px; font-size: .95rem; }
+.abody .more { color: var(--orange-ink); font-weight: 700; font-size: .92rem; }
+@media (max-width: 1000px) { .agrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .agrid { grid-template-columns: 1fr; } }
+
+/* About: certified travel coach (her Travel Coach Network certificate) */
+.cert { display: grid; grid-template-columns: minmax(220px, 340px) 1fr; gap: clamp(26px, 5vw, 60px); align-items: center; }
+.cert img { width: 100%; border-radius: 18px; box-shadow: var(--shadow); }
+.cert h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin: 4px 0 14px; }
+.cert p { color: var(--ink-soft); margin: 0 0 20px; max-width: 62ch; }
+@media (max-width: 760px) { .cert { grid-template-columns: 1fr; } .cert img { max-width: 320px; margin: 0 auto; } }
+
+/* About: a moment in motion (her bungee clip), muted, with a pause button */
+.mvid { position: relative; }
+.moment .mvid video { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 30% 50%; background: #1E2A20; }
+.mv-toggle { position: absolute; right: 12px; bottom: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(10, 35, 66, .78); color: #fff; cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .5); }
+.mv-toggle[hidden] { display: none; }
+.mv-toggle:hover { background: var(--navy); }
+.mv-toggle:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+.mv-toggle .mv-ic { width: 14px; height: 16px; border-left: 4px solid #fff; border-right: 4px solid #fff; box-sizing: border-box; }
+.mv-toggle.is-paused .mv-ic { width: 0; height: 0; border: 0; border-left: 14px solid #fff; border-top: 9px solid transparent; border-bottom: 9px solid transparent; margin-left: 4px; }
+
+/* Checklist pop-up (parity with the live site: 10 s after the page shows; here once per visit, never after a sign-up) */
+.kit-pop { padding: 0; border: 0; background: transparent; width: min(480px, calc(100% - 28px)); max-height: calc(100dvh - 28px); overflow: visible; color: var(--ink); }
+.kit-pop::backdrop { background: rgba(10, 20, 40, .58); }
+.kit-pop[open] { animation: kp-in .28s ease-out; }
+@keyframes kp-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .kit-pop[open] { animation: none; } }
+.kp-card:focus { outline: none; }
+.kp-card { position: relative; background: #fff; border-radius: 18px; box-shadow: 0 30px 70px -20px rgba(0, 0, 0, .45); overflow: auto; max-height: calc(100dvh - 28px); }
+.kp-top { background: var(--sand); padding: 26px 56px 20px 26px; }
+.kp-kicker { font: 900 .72rem var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); }
+.kp-top h2 { font-size: clamp(1.45rem, 4.6vw, 1.85rem); line-height: 1.25; margin: 6px 0 8px; }
+.kp-top p { margin: 0; color: #3A4152; font-size: .98rem; }
+.kp-body { padding: 8px 26px 24px; }
+.kp-body .cf7 label:first-of-type { margin-top: 14px; }
+.kp-body .thanks { padding: 18px 0 4px; }
+.kp-close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .7); color: var(--navy); font: 400 1.7rem/1 var(--body); cursor: pointer; display: grid; place-items: center; }
+.kp-close:hover { background: #fff; }
+.kp-close:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+html.kp-open { overflow: hidden; }
+@media (max-width: 420px) { .kp-top { padding: 22px 52px 16px 20px; } .kp-body { padding: 6px 20px 20px; } }

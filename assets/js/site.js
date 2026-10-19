@@ -1,5 +1,6 @@
-// Travel with Mkay v9 (13 Oct): menu, header shadow, typed destination, stats one by one (emoji on hover), featured logos sliding
-// one at a time, testimonial players, offer tabs, world map sneak peeks, checklist form, closing line. Everything degrades to readable static content without JS.
+// Travel with Mkay v10 (20 Oct): menu, header shadow, typed destination, stats one by one (emoji on hover), featured logos sliding
+// one at a time, testimonial players, offer tabs, world map sneak peeks, checklist form + checklist pop-up, a moment in motion,
+// closing line. Everything degrades to readable static content without JS.
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -260,6 +261,8 @@
           if (d.status === 'mail_sent') {
             $$(':scope > h3, :scope > p', card).forEach(function (el) { el.hidden = true; });
             form.hidden = true; thanks.hidden = false;
+            try { localStorage.setItem('mkay_kit_done', '1'); } catch (err) {}  // v10: no checklist pop-up after a sign-up
+            document.dispatchEvent(new CustomEvent('mkay:kit-sent', { detail: { form: form } }));
           } else if (d.status === 'validation_failed' && d.invalid_fields) {
             d.invalid_fields.forEach(function (f) { fieldError(f.field, f.message); });
           } else {
@@ -270,6 +273,71 @@
         .then(function () { btn.disabled = false; btn.textContent = label; });
     });
   });
+
+  // v10 About: a moment in motion (her Victoria Falls bungee clip). Muted, plays only while on screen, and the round button
+  // pauses it. Reduced motion or data saver: the still poster stays until the visitor presses play.
+  $$('.mvid').forEach(function (box) {
+    var v = box.querySelector('video'), b = box.querySelector('.mv-toggle');
+    if (!v || !b) return;
+    var saver = navigator.connection && navigator.connection.saveData;
+    var held = !!(reduce || saver), inView = false;
+    b.hidden = false;
+    function sync() {
+      var on = !v.paused;
+      b.classList.toggle('is-paused', !on);
+      b.setAttribute('aria-label', on ? 'Pause video' : 'Play video');
+    }
+    function run() {
+      if (inView && !held) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else if (!v.paused) v.pause();
+    }
+    v.addEventListener('play', sync); v.addEventListener('pause', sync);
+    b.addEventListener('click', function () {
+      if (v.paused) { held = false; var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { held = true; v.pause(); }
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { inView = es[0].isIntersecting; run(); }, { threshold: 0.35 }).observe(box);
+    }
+    sync();
+  });
+
+  // v10 Checklist pop-up, as on the live site: it opens 10 s after the page is showing. Kinder than live: once per visit (not
+  // on every page), never after a sign-up, and it waits while a video is playing, the menu is open or someone is typing.
+  // Native <dialog>: Esc closes it, focus stays inside while open and goes back where it was after.
+  var pop = document.getElementById('kit-pop');
+  if (pop && typeof pop.showModal === 'function') {
+    var store = function (kind, key, val) {
+      try { var s = kind === 'l' ? localStorage : sessionStorage; if (val === undefined) return s.getItem(key); s.setItem(key, val); } catch (err) { return null; }
+    };
+    var POP_DELAY = 10000, closeTimer = null;
+    var busy = function () {
+      var a = document.activeElement;
+      if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return true;
+      if (nav && nav.classList.contains('open')) return true;
+      if (document.querySelector('dialog[open]')) return true;
+      return $$('video').some(function (x) { return !x.paused && !x.muted; });
+    };
+    var openPop = function () {
+      if (store('l', 'mkay_kit_done') || store('s', 'mkay_pop_seen')) return;
+      if (document.visibilityState !== 'visible' || busy()) { setTimeout(openPop, 5000); return; }
+      store('s', 'mkay_pop_seen', '1');
+      document.documentElement.classList.add('kp-open');
+      pop.showModal();
+    };
+    var closePop = function () { if (pop.open) pop.close(); };
+    pop.addEventListener('close', function () { document.documentElement.classList.remove('kp-open'); clearTimeout(closeTimer); });
+    pop.querySelector('.kp-close').addEventListener('click', closePop);
+    pop.addEventListener('click', function (e) { if (e.target === pop) closePop(); });  // a click on the dimmed backdrop
+    document.addEventListener('mkay:kit-sent', function (e) {
+      if (pop.contains(e.detail.form)) closeTimer = setTimeout(closePop, 4000);
+    });
+    var arm = function () { setTimeout(openPop, POP_DELAY); };
+    if (!store('l', 'mkay_kit_done') && !store('s', 'mkay_pop_seen')) {
+      if (document.visibilityState === 'visible') arm();
+      else document.addEventListener('visibilitychange', function onVis() {
+        if (document.visibilityState === 'visible') { document.removeEventListener('visibilitychange', onVis); arm(); }
+      });
+    }
+  }
 
   // Closing line: "I'm going to ____." The button repeats what they typed.
   var dest = document.getElementById('going-to');
